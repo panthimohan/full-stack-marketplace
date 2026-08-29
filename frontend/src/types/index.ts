@@ -13,7 +13,11 @@ export interface User {
   date_joined: string;
 }
 
-export type VendorStatus = "PENDING" | "APPROVED" | "REJECTED" | "SUSPENDED";
+export type VendorStatus =
+  | "PENDING"
+  | "APPROVED"
+  | "REJECTED"
+  | "SUSPENDED";
 
 export interface VendorPublic {
   id: string;
@@ -50,7 +54,11 @@ export interface Category {
   created_at: string;
 }
 
-export type ProductStatus = "DRAFT" | "ACTIVE" | "INACTIVE" | "OUT_OF_STOCK";
+export type ProductStatus =
+  | "DRAFT"
+  | "ACTIVE"
+  | "INACTIVE"
+  | "OUT_OF_STOCK";
 
 export interface ProductImage {
   id: string;
@@ -58,6 +66,35 @@ export interface ProductImage {
   alt_text: string;
   is_primary: boolean;
   sort_order: number;
+  variant?: string | null;
+}
+
+export interface ProductVariant {
+  id: string;
+
+  // Variant options
+  color_name: string;
+  color_code: string;
+  size: string;
+
+  // Inventory / identification
+  sku: string;
+  stock: number;
+  is_active: boolean;
+
+  // Pricing
+  price: string | null;
+  effective_price: string;
+
+  // Availability
+  in_stock: boolean;
+
+  // Images belonging specifically to this variant
+  images: ProductImage[];
+
+  // Timestamps
+  created_at: string;
+  updated_at: string;
 }
 
 export interface ProductListItem {
@@ -71,13 +108,24 @@ export interface ProductListItem {
   vendor: VendorPublic;
   category: Category;
   primary_image: string | null;
+
+  // Available because ProductListSerializer returns variants
+  variants?: ProductVariant[];
+
   created_at: string;
 }
 
-export interface ProductDetail extends Omit<ProductListItem, "primary_image"> {
+export interface ProductDetail
+  extends Omit<ProductListItem, "primary_image" | "variants"> {
   sku: string;
   description: string;
+
+  // General product images
   images: ProductImage[];
+
+  // Color/size variants and their images
+  variants: ProductVariant[];
+
   updated_at: string;
 }
 
@@ -103,8 +151,20 @@ export interface Cart {
 }
 
 export type PaymentMethod = "COD" | "ESEWA";
-export type PaymentStatus = "PENDING" | "PAID" | "FAILED" | "REFUNDED";
-export type VendorOrderStatus = "PENDING" | "CONFIRMED" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED";
+
+export type PaymentStatus =
+  | "PENDING"
+  | "PAID"
+  | "FAILED"
+  | "REFUNDED";
+
+export type VendorOrderStatus =
+  | "PENDING"
+  | "CONFIRMED"
+  | "PROCESSING"
+  | "SHIPPED"
+  | "DELIVERED"
+  | "CANCELLED";
 
 export interface OrderItem {
   id: string;
